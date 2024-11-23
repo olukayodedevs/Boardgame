@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'maven'
+    }
+    environment {
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:${PATH}"
+    }
+    
+    stages {
+        stage('verify Java') {
+            steps {
+                sh 'java -version'
+            }
+        }
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/olukayodedevs/Boardgame.git'
+            }
+        }
+        stage('maven compile') {
+            steps {
+                sh "mvn compile"
+            }
+        }
+        stage('maven test') {
+            steps {
+                sh "mvn test"
+            }
+        }
+        stage('maven package') {
+            steps {
+                sh "mvn package"
+            }
+        }
+    }
+}
